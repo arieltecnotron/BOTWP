@@ -16,8 +16,7 @@ app.post('/webhook', (req, res) => {
     if (!message) {
         return res.sendStatus(400);
     }
-
-    // Aquí puedes agregar lógica para procesar el mensaje y responder
+         // AquÃ­ puedes agregar lÃ³gica para procesar el mensaje y responder
     const responseMessage = `Tu has dicho: ${message}`;
 
     axios.post(`https://graph.facebook.com/v12.0/me/messages`, {

@@ -1,0 +1,6 @@
+# EditorConfig ayuda a mantener estilos de codificación consistentes
+# en diferentes editores e IDEs
+
+# Aplicar a todos los archivos
+[*]
+charset = utf-8
