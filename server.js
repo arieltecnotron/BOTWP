@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 
 // Verificación del Webhook de Meta
 app.get("/webhook", (req, res) => {
-    const VERIFY_TOKEN = "TU_TOKEN_DE_VERIFICACION";
+    const VERIFY_TOKEN = "tecnobot2024verify";
 
     let mode = req.query["hub.mode"];
     let token = req.query["hub.verify_token"];
