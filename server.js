@@ -1,37 +1,34 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const axios = require('axios');
-require('dotenv').config();
+const express = require("express");
+const bodyParser = require("body-parser");
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
 
-const port = process.env.PORT || 3000;
+// Verificación del Webhook de Meta
+app.get("/webhook", (req, res) => {
+    const VERIFY_TOKEN = "TU_TOKEN_DE_VERIFICACION";
 
-// Ruta para recibir mensajes de WhatsApp
-app.post('/webhook', (req, res) => {
-    const message = req.body.message;
-    if (!message) {
-        return res.sendStatus(400);
+    let mode = req.query["hub.mode"];
+    let token = req.query["hub.verify_token"];
+    let challenge = req.query["hub.challenge"];
+
+    if (mode && token === VERIFY_TOKEN) {
+        console.log("WEBHOOK VERIFICADO");
+        res.status(200).send(challenge);
+    } else {
+        res.sendStatus(403);
     }
-         // Aquí puedes agregar lógica para procesar el mensaje y responder
-    const responseMessage = `Tu has dicho: ${message}`;
-
-    axios.post(`https://graph.facebook.com/v12.0/me/messages`, {
-        recipient: { id: req.body.senderId },
-        message: { text: responseMessage }
-    }, {
-        headers: { 'Authorization': `Bearer ${process.env.META_ACCESS_TOKEN}` }
-    }).then(response => {
-        res.sendStatus(200);
-    }).catch(error => {
-        console.error('Error al enviar mensaje a WhatsApp:', error);
-        res.sendStatus(500);
-    });
 });
 
-app.listen(port, () => {
-    console.log(`Servidor corriendo en el puerto ${port}`);
+// Manejo de mensajes entrantes
+app.post("/webhook", (req, res) => {
+    let body = req.body;
+
+    console.log("Mensaje recibido:", JSON.stringify(body, null, 2));
+
+    res.sendStatus(200);
 });
+
+// Iniciar servidor en Railway
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Servidor activo en puerto ${PORT}`));
